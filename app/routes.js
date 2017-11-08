@@ -77,9 +77,17 @@ router.get("/search",function(req,res){
 });
 
 router.get("/feeds/nodejs", function(req,res){
+    console.log(req.query.find)
+    if(req.query.find){
+        feedSchemaModel.find({"category" : "nodejs","published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data);
+        });
+    }
+    else{
     feedSchemaModel.find({"category" : "nodejs","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
         res.json(data);
     });
+}
 });
 
 router.post("/feeds/nodejs", function(req,res){
@@ -120,9 +128,16 @@ router.post("/feeds/nodejs", function(req,res){
 });
 
 router.get("/feeds/devops", function(req,res){
+    if(req.query.find){
+        feedSchemaModel.find({"category" : "devops","published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data);
+        });
+    }
+    else{
     feedSchemaModel.find({"category" : "devops","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
         res.json(data);
     });
+}
 });
 
 router.post("/feeds/devops", function(req,res){
@@ -167,9 +182,16 @@ router.post("/feeds/devops", function(req,res){
 });
 
 router.get("/feeds/product", function(req, res){
-    feedSchemaModel.find({"category" : "product", "published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+    if(req.query.find){
+        feedSchemaModel.find({"category" : "product","published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data);
+        });
+    }
+    else{
+    feedSchemaModel.find({"category" : "product","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
         res.json(data);
     });
+}
 });
 
 router.post("/feeds/product", function(req,res){
@@ -215,9 +237,16 @@ router.post("/feeds/product", function(req,res){
 
 
 router.get("/feeds/engineering", function(req, res){
-    feedSchemaModel.find({"category" : "engineering", "published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+    if(req.query.find){
+        feedSchemaModel.find({"category" : "engineering","published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data);
+        });
+    }
+    else{
+    feedSchemaModel.find({"category" : "engineering","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
         res.json(data);
     });
+}
 });
 
 router.post("/feeds/engineering", function(req,res){
@@ -263,9 +292,16 @@ router.post("/feeds/engineering", function(req,res){
 
 
 router.get("/feeds/design", function(req, res){
-    feedSchemaModel.find({"category" : "design", "published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+    if(req.query.find){
+        feedSchemaModel.find({"category" : "design","published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data);
+        });
+    }
+    else{
+    feedSchemaModel.find({"category" : "design","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
         res.json(data);
     });
+}
 });
 
 router.post("/feeds/design", function(req,res){
