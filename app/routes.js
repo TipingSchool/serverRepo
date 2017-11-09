@@ -4,6 +4,8 @@ const path = require("path");
 const Nodejs_model = require("../models/schemas/Nodejs");
 const Devops_model = require("../models/schemas/Devops");
 const feedSchemaModel = require("../models/schemas/FeedSchema");
+const addAutoFeeds = require("../feed-function/addAutoFeeds");
+
 
 // categories function imports
 // const Function_for_fetching_Nodejs_feeds = require("../feed-function/nodejs_function");
@@ -12,22 +14,64 @@ const FetchAllFeeds = require("../feed-function/fetchAllFeeds");
 
 ////////////////////////// API endpoints GET / POST / PUT /DELETE////////////////////
 
-// setInterval(function(){
-//     FetchAllFeeds();
-// }, 604800000);
+FetchAllFeeds();
+ setInterval(function(){
+     FetchAllFeeds();
+ }, 604800000);
     
-router.get("/", function(req, res){
-    FetchAllFeeds();
-});
 
 
-router.get("/feeds",function(req,res){
+
+router.get("/",function(req,res){
     feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
        res.json(data);
     });   
 });
 
-router.post("/feeds", function(req,res){
+// **************************** GET ************************************88
+// feeds?cat=react&state=none => all unpublished of react
+// get can get pub, unpub, archived, pub&arch
+
+router.get('/feeds',function(req,res){
+
+    //console.log(req.query);
+    if(req.query.state === 'pub') {
+        feedSchemaModel.find({"category" : {$regex : req.query.cat}, "published" : true }).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+        });
+    }
+
+    if (req.query.state === 'arch'){
+        feedSchemaModel.find({"category" : {$regex : req.query.cat}, "archived" : true }).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+        });
+    }
+
+    if (req.query.state === 'archpub') {
+        feedSchemaModel.find({"category" : {$regex : req.query.cat}, "published" : true , "archived" : true }).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+        });
+    }
+
+    if(req.query.state === "unpub") {
+        feedSchemaModel.find({"category" : {$regex : req.query.cat}, "published" : false }).sort({"date" : -1}).exec(function(err, data){
+            res.json(data);
+            });
+    }
+
+    if(req.query.state === "none" ) {
+        
+        feedSchemaModel.find({"category" : {$regex : req.query.cat}, "published" : false }).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+        });
+    }
+}); 
+
+// ***************************** POST *********************************
+// post can pub , unpub, delete, archive any cat 
+//feeds?cat=react  and body.action = delete, body.id = blabla 
+
+router.post('/feeds',function(req,res){
     if(req.body.action === "delete"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndRemove(_id, function(err){
@@ -51,7 +95,7 @@ router.post("/feeds", function(req,res){
         });
     }
 
-    else{
+    else if(req.body.action === "publish"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
             if(err){
@@ -62,7 +106,21 @@ router.post("/feeds", function(req,res){
             }
         });
     }
+
+    else if(req.body.action === "unpublish"){
+        let _id = req.body.feedObjectId;
+        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : false}}, function(err,doc){
+            if(err){
+                console.log("Something gone wrong!!");
+            }
+            else{
+                console.log("published succesfully");
+            }
+        });
+    }
+
 });
+
 
 
 router.get("/search",function(req,res){
@@ -76,290 +134,10 @@ router.get("/search",function(req,res){
         
 });
 
-router.get("/feeds/nodejs", function(req,res){
-    feedSchemaModel.find({"category" : "nodejs","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
+router.post('/autoadd',function(req,res) {
+    let url = req.query.url;
+    addAutoFeeds(url);
 });
 
-router.post("/feeds/nodejs", function(req,res){
-    if(req.body.action === "delete"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("Some thing gone wrong");
-            }
-            else{
-                console.log("deleted successfully");
-            }
-        });
-    }
-    else if(req.body.action === "archive"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("archived succesfully");
-            }
-        });
-    }
-
-    else if(req.body.action === "publish"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("published succesfully");
-            }
-        });
-    }
-});
-
-router.get("/feeds/devops", function(req,res){
-    feedSchemaModel.find({"category" : "devops","published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-router.post("/feeds/devops", function(req,res){
-    if(req.body.action === "delete"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("deleted");
-            }
-            else{
-                console.log("deleted successfully");
-            }
-        });
-        console.log(req.body);
-    }
-    else if(req.body.action === "archive"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("archived succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-    else if(req.body.action === "publish"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("published succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-});
-
-router.get("/feeds/product", function(req, res){
-    feedSchemaModel.find({"category" : "product", "published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-router.post("/feeds/product", function(req,res){
-    if(req.body.action === "delete"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("deleted");
-            }
-            else{
-                console.log("deleted successfully");
-            }
-        });
-        console.log(req.body);
-    }
-    else if(req.body.action === "archive"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("archived succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-    else if(req.body.action === "publish"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("published succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-});
-
-
-router.get("/feeds/engineering", function(req, res){
-    feedSchemaModel.find({"category" : "engineering", "published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-router.post("/feeds/engineering", function(req,res){
-    if(req.body.action === "delete"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("deleted");
-            }
-            else{
-                console.log("deleted successfully");
-            }
-        });
-        console.log(req.body);
-    }
-    else if(req.body.action === "archive"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("archived succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-    else if(req.body.action === "publish"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("published succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-});
-
-
-router.get("/feeds/design", function(req, res){
-    feedSchemaModel.find({"category" : "design", "published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-router.post("/feeds/design", function(req,res){
-    if(req.body.action === "delete"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("deleted");
-            }
-            else{
-                console.log("deleted successfully");
-            }
-        });
-        console.log(req.body);
-    }
-    else if(req.body.action === "archive"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("archived succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-    else if(req.body.action === "publish"){
-        let _id = req.body.feedObjectId;
-        feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
-            }
-            else{
-                console.log("published succesfully");
-            }
-        });
-        console.log(req.body);
-    }
-
-});
-
-
-router.get("/count", function(req,res){
-    feedSchemaModel.count({}, function(err,total){
-        res.json(total);
-    });
-});
-
-
-router.get("/feeds/archived", function(req,res){
-    feedSchemaModel.find({"archived" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-
-
-
-
-//////////// published API routes/////////////
-
-router.get("/feeds/published/nodejs", function(req,res){
-    feedSchemaModel.find({"category" : "nodejs", "published" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-
-router.get("/feeds/published/devops", function(req,res){
-    feedSchemaModel.find({"category" : "devops", "published" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);        
-    });
-});
-
-router.get("/feeds/published/product", function(req, res){
-    feedSchemaModel.find({"category" : "product", "published" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-router.get("/feeds/published/engineering", function(req, res){
-    feedSchemaModel.find({"category" : "engineering", "published" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-router.get("/feeds/published/design", function(req, res){
-    feedSchemaModel.find({"category" : "design", "published" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
-    });
-});
-
-
-
+// ***************************************** DONEEEEEEEEEEEEEEEEEEEEEEEEEEE **************************
 module.exports = router;

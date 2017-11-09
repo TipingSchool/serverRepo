@@ -13,13 +13,14 @@ var engineeringFunctionWhenDbIsEmpty = [
                     date : item[i].pubDate,
                     link : item[i].link,
                     creator : item[i].creator,
-                    category : "engineering",
+                    category : item[i].category,
                     archived : false,
                     published : false
                 });
                 entry.save(function(e){
                     if(e) throw e;
                     console.log("feed added from webengage engineering");
+                    console.log("cateogy is " + item[i].category);
                 });
             }
         });
