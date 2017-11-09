@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
-const Nodejs_model = require("../models/schemas/Nodejs");
-const Devops_model = require("../models/schemas/Devops");
 const feedSchemaModel = require("../models/schemas/FeedSchema");
 const addAutoFeeds = require("../feed-function/addAutoFeeds");
 
@@ -23,9 +21,36 @@ FetchAllFeeds();
 
 
 router.get("/",function(req,res){
-    feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-       res.json(data);
-    });   
+    if(req.query.state === "pub") {
+        feedSchemaModel.find({"published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+         });  
+    }
+
+    if(req.query.state === "arch") {
+        feedSchemaModel.find({"published" : false, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+         });  
+    }
+
+    if(req.query.state === "unpub") {
+        feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+         });  
+    }
+
+    if(req.query.state === "pubarch") {
+        feedSchemaModel.find({"published" : true, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+         });  
+    }
+
+    if(req.query.state === "unpubarch") {
+        feedSchemaModel.find({"published" : false, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+         });  
+    }
+     
 });
 
 // **************************** GET ************************************88
