@@ -1,10 +1,17 @@
 const parser = require('rss-parser');
 const feedSchemaModel = require("../models/schemas/FeedSchema");
 const updateCategory = require("./updateCategory");
+
  
 function addAutoFeeds (url) {
+    let flag = 0;
+
     (function() {
         parser.parseURL(url, function(error, parsed){
+            if(error) {
+               flag = 1;
+               return false;
+            }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
             console.log(len);
@@ -47,6 +54,9 @@ function addAutoFeeds (url) {
 
         //updateCategory(cat);
     })();
+
+    if(flag == 1) return false;
+    return true;
 }
 
 module.exports = addAutoFeeds;

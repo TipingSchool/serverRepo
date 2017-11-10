@@ -6,7 +6,9 @@ const urlArray = require('../models/urlArray');
 
 function fetchAllFeeds() {
     urlArray.forEach(function(element) {
-        addAutoFeeds(element);
+        if(!(addAutoFeeds(element))){
+            console.log("error in url" + element);
+        }
     }, this);
 }
 
