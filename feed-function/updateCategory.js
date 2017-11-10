@@ -1,6 +1,6 @@
 const feedSchemaModel = require("../models/schemas/FeedSchema");
 
-let catArray = ['nodejs','react','devops','mongodb','html', 'engineering', 'crypto', 'design', 'product'];
+let catArray = ['nodejs','react','devops','mongodb','html', 'engineering', 'crypto', 'design', 'product','express'];
 let finalCat = "";
 let len , titleLength, linkLength;
 
