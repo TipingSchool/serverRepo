@@ -29,6 +29,7 @@ router.get('/feeds/:cat/', function(req,res) {
 
     if(req.query.state === 'pub') {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : true }).sort({"date" : -1}).exec(function(err, data){
+        console.log("published" + req.params.cat)
         res.json(data);
         });
     }
@@ -52,11 +53,15 @@ router.get('/feeds/:cat/', function(req,res) {
     }
 
     if(req.query.state === "unpub") {
-
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : false }).sort({"date" : -1}).exec(function(err, data){
-            console.log("published" + req.params.cat)
+            console.log("unpublished" + req.params.cat)
             res.json(data);
             });
+    }
+    if(req.query.state === "latest100") {
+        feedSchemaModel.find({"category" : {$regex : req.params.cat}}).sort({"date" : -1}).limit(100).exec(function(err, data){
+        res.json(data); 
+        });  
     }
 
 });
@@ -89,6 +94,12 @@ router.get("/feeds",function(req,res){
 
     if(req.query.state === "unpubarch") {
         feedSchemaModel.find({"published" : false, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data); 
+        });  
+    }
+    
+    if(req.query.state === "latest100") {
+        feedSchemaModel.find({}).sort({"date" : -1}).limit(100).exec(function(err, data){
             res.json(data); 
         });  
     }
