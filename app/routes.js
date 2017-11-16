@@ -67,7 +67,22 @@ router.get('/feeds/:cat/', function(req,res) {
     if(req.query.state === "last7days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -7);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).limit(100).exec(function(err, data){
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data); 
+        });  
+    }
+
+    if(req.query.state === "last14days") {
+        var lastWeek = new Date();
+        lastWeek.setDate(lastWeek.getDate() -14);
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+            res.json(data); 
+        });  
+    }
+    if(req.query.state === "last21days") {
+        var lastWeek = new Date();
+        lastWeek.setDate(lastWeek.getDate() -21);
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             res.json(data); 
         });  
     }
@@ -75,7 +90,7 @@ router.get('/feeds/:cat/', function(req,res) {
 });
 
 
-router.get("/feeds",function(req,res){
+router.get("/",function(req,res){
     if(req.query.state === "pub") {
         feedSchemaModel.find({"published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
         res.json(data);
@@ -115,7 +130,7 @@ router.get("/feeds",function(req,res){
     if(req.query.state === "last7days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -7);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).limit(100).exec(function(err, data){
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             res.json(data); 
         });  
     }
@@ -123,17 +138,22 @@ router.get("/feeds",function(req,res){
     if(req.query.state === "last14days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -14);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).limit(100).exec(function(err, data){
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             res.json(data); 
         });  
     }
     if(req.query.state === "last21days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -21);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).limit(100).exec(function(err, data){
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             res.json(data); 
         });  
     }
+
+   else{ feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+        res.json(data);
+    }); 
+}
      
 });
 
@@ -142,7 +162,7 @@ router.get("/feeds",function(req,res){
 // post can pub , unpub, delete, archive any cat 
 //feeds?cat=react  and body.action = delete, body.id = blabla 
 
-router.post('/feeds',function(req,res){
+router.post('/',function(req,res){
     if(req.body.action === "delete"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndRemove(_id, function(err){
