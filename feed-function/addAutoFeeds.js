@@ -14,7 +14,7 @@ function addAutoFeeds (url) {
             }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
-            console.log(len);
+            //console.log(len);
 
             for(let i = 0; i < len; i++){
                 
@@ -39,7 +39,7 @@ function addAutoFeeds (url) {
                                 entry.save(function(e){
                                     if(e) throw e;
                                     //console.log("feed added..........");
-                                    console.log("cateogy is " + entry.category);
+                                   // console.log("cateogy is " + entry.category);
                                 });
                             }
 
@@ -49,7 +49,7 @@ function addAutoFeeds (url) {
                 });
              }
             
-            console.log("done............");
+            //console.log("done............");
         });
 
         //updateCategory(cat);

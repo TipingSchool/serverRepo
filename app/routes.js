@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const feedSchemaModel = require("../models/schemas/FeedSchema");
+const ArraySchemaModel = require('../models/schemas/ArraySchema');
 const addAutoFeeds = require("../feed-function/addAutoFeeds");
+const addNewCategory = require('../models/catArray');
+const ArrayFunctions = require('../feed-function/ArrayFunctions');
 
 
 // categories function imports
@@ -11,12 +14,13 @@ const addAutoFeeds = require("../feed-function/addAutoFeeds");
 const FetchAllFeeds = require("../feed-function/fetchAllFeeds");
 
 ////////////////////////// API endpoints GET / POST / PUT /DELETE////////////////////
-
+ArrayFunctions.Init();
 FetchAllFeeds();
  setInterval(function(){
      FetchAllFeeds();
+     
  }, 604800000);
-    
+
 
 router.get('/feeds/:cat/', function(req,res) {
 
@@ -290,13 +294,28 @@ router.get("/search",function(req,res){
         
 });
 
-router.post('/autoadd',function(req,res) {
+router.post('/addnewurl',function(req,res) {
     let url = req.body.url;
     //console.log(req.body.url);
-    if(!(addAutoFeeds(url))) {
-        console.log("failure");
-        res.send(false);
+    if(!(ArrayFunctions.addNewCat(category))) {
+        res.json({"status" : "false"});
+        res.end();
     }
+
+    if(!(addAutoFeeds(url))) {
+        res.json({"status" : "false"});
+        res.end();
+    }
+});
+
+router.post('/addnewcat', function(req,res) {
+    let category = req.body.cat;
+    if( ArrayFunctions.addNewCat(category)) {
+        res.json({"status" : "true"});
+        res.end();
+    }
+
+    res.json({"status" : "false"});
 });
 
 // ***************************************** DONEEEEEEEEEEEEEEEEEEEEEEEEEEE **************************
