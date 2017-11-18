@@ -3,14 +3,11 @@ const feedSchemaModel = require("../models/schemas/FeedSchema");
 const updateCategory = require("./updateCategory");
 
  
-function addAutoFeeds (url) {
-    let flag = 0;
-
+function addAutoFeeds (url, callback) {
     (function() {
         parser.parseURL(url, function(error, parsed){
             if(error) {
-               flag = 1;
-               return false;
+               callback(true,null);
             }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
@@ -55,8 +52,8 @@ function addAutoFeeds (url) {
         //updateCategory(cat);
     })();
 
-    if(flag == 1) return false;
-    return true;
+    callback(null,true);
+
 }
 
 module.exports = addAutoFeeds;

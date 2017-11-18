@@ -43,7 +43,7 @@ function Init () {
     });
 }
 
-function addNewUrl (url) {
+function addNewUrl (url, callback) {
         ArraySchema.find({"url" : url}, function(error,items) {
             if(items.length == 0) {
                      entry = new ArraySchema ({
@@ -54,17 +54,19 @@ function addNewUrl (url) {
                     if(e) throw e;
                     console.log("new url added" + url);
                 });
+                callback(null,true);
+            }
+            else {
+                callback(true,null);
             }
             
         });
 }
 
-function addNewCat (cat) {
-        let flag = false;
-         ArraySchema.find({"category" : cat}, function(error,items) {
+function addNewCat (cat, callback) {
+            ArraySchema.find({"category" : cat}, function(error,items) {
             if(items.length == 0) {
-                flag = true;
-                     entry = new ArraySchema ({
+                    entry = new ArraySchema ({
                     category : cat
                 });
 
@@ -72,15 +74,12 @@ function addNewCat (cat) {
                     if(e) throw e;
                     console.log("new category added" + cat);
                 });
-                
+                callback(null,true);
             }
-
-            
-            
-            
+            else {
+                callback(true,null);
+            }   
         });
-        console.log("flag is " + flag)
-        return flag;
 }
 
 module.exports = {
