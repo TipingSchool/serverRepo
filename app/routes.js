@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const feedSchemaModel = require("../models/schemas/FeedSchema");
+const ArraySchemaModel = require('../models/schemas/ArraySchema');
 const addAutoFeeds = require("../feed-function/addAutoFeeds");
-
+const addNewCategory = require('../models/catArray');
+const ArrayFunctions = require('../feed-function/ArrayFunctions');
 
 // categories function imports
 // const Function_for_fetching_Nodejs_feeds = require("../feed-function/nodejs_function");
@@ -11,62 +13,130 @@ const addAutoFeeds = require("../feed-function/addAutoFeeds");
 const FetchAllFeeds = require("../feed-function/fetchAllFeeds");
 
 ////////////////////////// API endpoints GET / POST / PUT /DELETE////////////////////
-
+ArrayFunctions.Init();
 FetchAllFeeds();
  setInterval(function(){
      FetchAllFeeds();
+     
  }, 604800000);
-    
+
 
 router.get('/feeds/:cat/', function(req,res) {
 
     if(Object.keys(req.query).length == 0 ) {
         feedSchemaModel.find({"category" : req.params.cat,"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
+            if(err) {
+                res.setHeader("status",false);
+                res.json({"status" : false});
+                return;
+            }
+            //console.log(data);
+            if(data.length == 0) {
+                res.setHeader("status",false);
+                res.json(data);
+                return;
+            }
+            res.setHeader("status",true);
+            res.json(data);
         }); 
     }
 
 
     if(req.query.state === 'pub') {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : true }).sort({"date" : -1}).exec(function(err, data){
-        console.log("published" + req.params.cat)
-        res.json(data);
+            if(err) {
+                res.json({"status" : false});
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
+            console.log("published" + req.params.cat)
         });
     }
 
     if (req.query.state === 'arch'){
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "archived" : true }).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
         });
     }
 
     if (req.query.state === 'pubarch') {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : true , "archived" : true }).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader({"status" : false});
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
         });
     }
 
     if (req.query.state === 'unpubarch') {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : false , "archived" : true }).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
         });
     }
 
     if(req.query.state === "unpub") {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : false }).sort({"date" : -1}).exec(function(err, data){
             console.log("unpublished" + req.params.cat)
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
             res.json(data);
             });
     }
     if(req.query.state === "latest100") {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}}).sort({"date" : -1}).limit(100).exec(function(err, data){
-        res.json(data); 
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
         });  
     }
 
     if(req.query.state === "last7days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -7);
+<<<<<<< HEAD
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             res.json(data); 
         });  
@@ -75,13 +145,55 @@ router.get('/feeds/:cat/', function(req,res) {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -14);
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+=======
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
+        });  
+    }
+
+    if(req.query.state === "last14days") {
+        var lastWeek = new Date();
+        lastWeek.setDate(lastWeek.getDate() -14);
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+>>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
     if(req.query.state === "last21days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -21);
+<<<<<<< HEAD
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+=======
+        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+>>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
@@ -89,39 +201,93 @@ router.get('/feeds/:cat/', function(req,res) {
 });
 
 
-router.get("/feeds",function(req,res){
+router.get("/",function(req,res){
     if(req.query.state === "pub") {
         feedSchemaModel.find({"published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
          });  
     }
 
     if(req.query.state === "arch") {
         feedSchemaModel.find({"published" : false, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
-        res.json(data);
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+            res.json(data);
          });  
     }
 
     if(req.query.state === "unpub") {
         feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
             res.json(data);
         });  
     }
 
     if(req.query.state === "pubarch") {
         feedSchemaModel.find({"published" : true, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
             res.json(data);
         });  
     }
 
     if(req.query.state === "unpubarch") {
         feedSchemaModel.find({"published" : false, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
             res.json(data); 
         });  
     }
     
     if(req.query.state === "latest100") {
         feedSchemaModel.find({}).sort({"date" : -1}).limit(100).exec(function(err, data){
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
             res.json(data); 
         });  
     }
@@ -130,6 +296,18 @@ router.get("/feeds",function(req,res){
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -7);
         feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+<<<<<<< HEAD
+=======
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+>>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
@@ -138,6 +316,18 @@ router.get("/feeds",function(req,res){
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -14);
         feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+<<<<<<< HEAD
+=======
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+>>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
@@ -145,9 +335,35 @@ router.get("/feeds",function(req,res){
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -21);
         feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+<<<<<<< HEAD
+=======
+            if(err) {
+                res.setHeader("status",false);
+                return;
+            }
+            if(data == null) {
+                res.setHeader("status",false);
+                res.json(data);
+            }
+            res.setHeader("status",true);
+>>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
+
+   else{ feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+    if(err) {
+        res.setHeader("status",false);
+        return;
+    }
+    if(data == null) {
+        res.setHeader("status",false);
+        res.json(data);
+    }
+    res.setHeader("status",true);
+    res.json(data);
+    }); 
+}
      
 });
 
@@ -156,116 +372,109 @@ router.get("/feeds",function(req,res){
 // post can pub , unpub, delete, archive any cat 
 //feeds?cat=react  and body.action = delete, body.id = blabla 
 
-router.post('/feeds',function(req,res){
+router.post('/',function(req,res){
     if(req.body.action === "delete"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("something gone wrong");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("deleted successfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
     else if(req.body.action === "archive"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("archived succesfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
 
     else if(req.body.action === "publish"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("published succesfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
 
     else if(req.body.action === "unpublish"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : false}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("published succesfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
 
 });
-
-
-
-router.get("/search",function(req,res){
-      feedSchemaModel.find(
-          {$text: {$search: req.query.q}},
-        { score : { $meta: "textScore" } }
-      ).sort({ score : { $meta : 'textScore' } }
-      ).exec(function(err, data){
-        res.json(data);
-    });
-        
-});
-
-
 
 router.post('/feeds/:cat',function(req,res){
     if(req.body.action === "delete"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndRemove(_id, function(err){
-            if(err){
-                console.log("something gone wrong");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("deleted successfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
     else if(req.body.action === "archive"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"archived" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("archived succesfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
 
     else if(req.body.action === "publish"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("published succesfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
 
     else if(req.body.action === "unpublish"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : false}}, function(err,doc){
-            if(err){
-                console.log("Something gone wrong!!");
+            if(err) {
+                res.setHeader("status" , false);
+                res.end();
+                return;
             }
-            else{
-                console.log("unpublished succesfully");
-            }
+            res.setHeader("status" , true);
+            res.end();
         });
     }
 
@@ -284,13 +493,34 @@ router.get("/search",function(req,res){
         
 });
 
-router.post('/autoadd',function(req,res) {
+router.post('/addnewurl',function(req,res) {
     let url = req.body.url;
     //console.log(req.body.url);
-    if(!(addAutoFeeds(url))) {
-        console.log("failure");
-        res.send(false);
-    }
+    ArrayFunctions.addNewUrl(url,function (err,status) {
+        if(err) {
+            res.json({"status" : false});
+            return;
+        }
+            res.json({"status" : true});
+    });
+    addAutoFeeds(url,function (err,status) {
+        if(err) {
+            res.json({"status" : false});
+            return ;
+        }
+            res.json({"status" : true});
+    });
+});
+
+router.post('/addnewcat', function(req,res) {
+    let category = req.body.cat;
+    ArrayFunctions.addNewCat(category, function (err,status) {
+        if(err) {
+            res.json({"status" : false});
+            return;
+        }
+            res.json({"status" : true});
+    });
 });
 
 // ***************************************** DONEEEEEEEEEEEEEEEEEEEEEEEEEEE **************************
