@@ -24,7 +24,7 @@ FetchAllFeeds();
 router.get('/feeds/:cat/', function(req,res) {
 
     if(Object.keys(req.query).length == 0 ) {
-        feedSchemaModel.find({"category" : req.params.cat,"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
+        feedSchemaModel.find({"category" : {$regex : req.params.cat.toLowerCase()},"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 res.json({"status" : false});

@@ -1,4 +1,4 @@
-
+const Pseudo = require('../models/PseudoArray');
 const ArraySchema = require('../models/schemas/ArraySchema'); 
 const urlArray = require('../models/urlArray');
 const catArray = require('../models/catArray');
@@ -22,6 +22,7 @@ function Init () {
         });
     });
 
+
     //console.log(catArray);
 
     catArray.forEach(element => {
@@ -41,6 +42,9 @@ function Init () {
             
         });
     });
+
+    Pseudo.fillCat();
+    Pseudo.fillUrl();
 }
 
 function addNewUrl (url, callback) {
@@ -61,6 +65,7 @@ function addNewUrl (url, callback) {
             }
             
         });
+        Pseudo.fillUrl();
 }
 
 function addNewCat (cat, callback) {
@@ -80,6 +85,7 @@ function addNewCat (cat, callback) {
                 callback(true,null);
             }   
         });
+        Pseudo.fillCat();
 }
 
 module.exports = {
