@@ -136,17 +136,7 @@ router.get('/feeds/:cat/', function(req,res) {
     if(req.query.state === "last7days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -7);
-<<<<<<< HEAD
-        feedSchemaModel.find({"category" : {$regex : req.params.cat}, "date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
-            res.json(data); 
-        });  
-    }
-    if(req.query.state === "last14days") {
-        var lastWeek = new Date();
-        lastWeek.setDate(lastWeek.getDate() -14);
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
-=======
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 return;
@@ -163,7 +153,7 @@ router.get('/feeds/:cat/', function(req,res) {
     if(req.query.state === "last14days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -14);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
+        feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 return;
@@ -173,17 +163,13 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.json(data);
             }
             res.setHeader("status",true);
->>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
     if(req.query.state === "last21days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -21);
-<<<<<<< HEAD
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
-=======
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 return;
@@ -193,7 +179,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.json(data);
             }
             res.setHeader("status",true);
->>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
@@ -295,9 +280,7 @@ router.get("/",function(req,res){
     if(req.query.state === "last7days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -7);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
-<<<<<<< HEAD
-=======
+        feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 return;
@@ -307,7 +290,6 @@ router.get("/",function(req,res){
                 res.json(data);
             }
             res.setHeader("status",true);
->>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
@@ -315,9 +297,7 @@ router.get("/",function(req,res){
     if(req.query.state === "last14days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -14);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
-<<<<<<< HEAD
-=======
+        feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 return;
@@ -327,16 +307,13 @@ router.get("/",function(req,res){
                 res.json(data);
             }
             res.setHeader("status",true);
->>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
     if(req.query.state === "last21days") {
         var lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() -21);
-        feedSchemaModel.find({"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
-<<<<<<< HEAD
-=======
+        feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
                 return;
@@ -346,7 +323,6 @@ router.get("/",function(req,res){
                 res.json(data);
             }
             res.setHeader("status",true);
->>>>>>> 49abdac1bf61fddae98bdacf3754046e9fb63d0e
             res.json(data); 
         });  
     }
