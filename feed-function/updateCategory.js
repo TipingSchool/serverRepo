@@ -1,16 +1,10 @@
-const ArraySchema = require('../models/schemas/ArraySchema');
-let catArray = [];
-ArraySchema.find({"category" : RegExp('.*?')}).select('category -_id').exec(function(err,items) {
-    items.forEach(element => {
-        catArray.push(element.category);
-    });
-});
-let finalCat = "";
-let len , titleLength, linkLength;
-
+const catArray = require('../models/PseudoArray').cat;
 module.exports =  function updateCategory (item) {
+    let finalCat = "";
+    let len , titleLength, linkLength;
 
     finalCat = "";
+    //console.log("ASdasd  ansh");
     
     catArray.forEach(function(element) {
         //length = item.title.toLowerCase().match(new RegExp(element,"g")).length + item.link.toLowerCase().match(new RegExp(element,"g")).length; 
@@ -23,16 +17,14 @@ module.exports =  function updateCategory (item) {
             if(finalCat == 0 ) finalCat = finalCat + element;
             else finalCat = finalCat +',' + element;
         }
-
-        // if ( len == 1 ) {
-        //     finalCat = "uncategorized"
-        // }
     }, this);
 
+    
+    //console.log("final cat is" + finalCat);
     if(finalCat == "") return "discard";
 
     //console.log("final cat is " + finalCat);
-
+    //console.log("cateafalsjdkasd is " + finalCat);
     return finalCat;
 
 }

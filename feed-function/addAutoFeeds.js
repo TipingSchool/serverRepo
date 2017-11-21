@@ -1,3 +1,5 @@
+
+
 const parser = require('rss-parser');
 const feedSchemaModel = require("../models/schemas/FeedSchema");
 const updateCategory = require("./updateCategory");
@@ -8,6 +10,7 @@ function addAutoFeeds (url, callback) {
         parser.parseURL(url, function(error, parsed){
             if(error) {
                callback(true,null);
+               return;
             }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
@@ -36,7 +39,7 @@ function addAutoFeeds (url, callback) {
                                 entry.save(function(e){
                                     if(e) throw e;
                                     //console.log("feed added..........");
-                                   // console.log("cateogy is " + entry.category);
+                                     console.log("category is : " + entry.category);
                                 });
                             }
 
@@ -52,7 +55,7 @@ function addAutoFeeds (url, callback) {
         //updateCategory(cat);
     })();
 
-    callback(null,true);
+   
 
 }
 

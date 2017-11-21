@@ -8,7 +8,7 @@ var feedSchema = new Schema({
     date : {type : Date, required : true},
     link : {type : String, required : true},
     creator : {type : String, required : true},
-    category : {type : String, required : true},
+    category : {type : String, required : true, lowercase : true},
     archived : {type : Boolean, required : true},
     published : {type : Boolean, required : true}
 });
