@@ -30,7 +30,7 @@ function addAutoFeeds (url, callback) {
                             date : item[i].pubDate,
                             link : item[i].link,
                             creator : item[i].creator,
-                            category : item[i].categories  == undefined ? updateCategory(item[i]) : item[i].categories,
+                            category : updateCategory(item[i]),
                             archived : false,
                             published : false
                         });
