@@ -57,7 +57,7 @@ router.get('/feeds/:cat/', function(req,res) {
             }
             res.setHeader("status",true);
             res.json(data);
-            console.log("published" + req.params.cat)
+            console.log("published : " + req.params.cat)
         });
     }
 
@@ -129,15 +129,19 @@ router.get('/feeds/:cat/', function(req,res) {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}}).sort({"date" : -1}).limit(100).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                res.end();
                 return;
             }
             if(data == null) {
                 res.setHeader("status",false);
                 res.json(data);
+                res.end();
                 return;
             }
             res.setHeader("status",true);
             res.json(data);
+            console.log("errassssssssssssssssssssssssssssssssssssl");
+            return;
         });  
     }
 
@@ -156,6 +160,7 @@ router.get('/feeds/:cat/', function(req,res) {
             }
             res.setHeader("status",true);
             res.json(data);
+            return;
         });  
     }
 
@@ -174,6 +179,7 @@ router.get('/feeds/:cat/', function(req,res) {
             }
             res.setHeader("status",true);
             res.json(data); 
+            return;
         });  
     }
     if(req.query.state === "last21days") {
@@ -191,6 +197,7 @@ router.get('/feeds/:cat/', function(req,res) {
             }
             res.setHeader("status",true);
             res.json(data); 
+            return;
         });  
     }
 
@@ -202,15 +209,19 @@ router.get("/",function(req,res){
         feedSchemaModel.find({"published" : true, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                //res.end();
+                data = {};
                 return;
             }
-            if(data == null) {
+            if(data.length == 0 ) {
                 res.setHeader("status",false);
-                res.json(data);
+                //res.json(data);
                 return;
             }
+            console.log("asd");
             res.setHeader("status",true);
             res.json(data);
+            return;
          });  
     }
 
@@ -218,6 +229,7 @@ router.get("/",function(req,res){
         feedSchemaModel.find({"published" : false, "archived" : true}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                data = {};
                 return;
             }
             if(data == null) {
@@ -227,6 +239,7 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data);
+            return;
          });  
     }
 
@@ -234,6 +247,7 @@ router.get("/",function(req,res){
         feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                data = {};
                 return;
             }
             if(data == null) {
@@ -243,6 +257,7 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data);
+            return;
         });  
     }
 
@@ -259,6 +274,7 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data);
+            return;
         });  
     }
 
@@ -275,6 +291,7 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data); 
+            return;
         });  
     }
     
@@ -282,6 +299,7 @@ router.get("/",function(req,res){
         feedSchemaModel.find({}).sort({"date" : -1}).limit(100).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                res.end();
                 return;
             }
             if(data == null) {
@@ -291,6 +309,7 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data); 
+            return;
         });  
     }
 
@@ -308,7 +327,8 @@ router.get("/",function(req,res){
                 return;
             }
             res.setHeader("status",true);
-            res.json(data); 
+            res.json(data);
+            return; 
         });  
     }
 
@@ -327,6 +347,7 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data); 
+            return;
         });  
     }
     if(req.query.state === "last21days") {
@@ -344,23 +365,11 @@ router.get("/",function(req,res){
             }
             res.setHeader("status",true);
             res.json(data); 
+            return;
         });  
     }
 
-   else{ feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
-    if(err) {
-        res.setHeader("status",false);
-        return;
-    }
-    if(data == null) {
-        res.setHeader("status",false);
-        res.json(data);
-        return;
-    }
-    res.setHeader("status",true);
-    res.json(data);
-    }); 
-}
+   
      
 });
 
@@ -370,6 +379,7 @@ router.get("/",function(req,res){
 //feeds?cat=react  and body.action = delete, body.id = blabla 
 
 router.post('/',function(req,res){
+    res.removeHeader(status);
     if(req.body.action === "delete"){
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndRemove(_id, function(err){
@@ -450,6 +460,7 @@ router.post('/feeds/:cat',function(req,res){
     }
 
     else if(req.body.action === "publish"){
+        console.log("called");
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
             if(err) {
@@ -457,8 +468,6 @@ router.post('/feeds/:cat',function(req,res){
                 res.end();
                 return;
             }
-            res.setHeader("status" , true);
-            res.end();
         });
     }
 
