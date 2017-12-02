@@ -248,7 +248,7 @@ router.get("/",function(req,res){
          });  
     }
 
-    if(req.query.state === "unpub") {
+    if(req.query.state == undefined) {
         feedSchemaModel.find({"published" : false, "archived" : false}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
