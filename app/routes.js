@@ -32,12 +32,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.json({"status" : false});
                 return;
             }
-            //console.log(data);
-            if(data.length == 0) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+
             res.setHeader("status",true);
             res.json(data);
         }); 
@@ -50,12 +45,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.json({"status" : false});
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
             console.log("published : " + req.params.cat)
@@ -68,11 +58,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
         });
@@ -84,11 +70,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader({"status" : false});
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
         });
@@ -100,11 +82,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+            
             res.setHeader("status",true);
             res.json(data);
         });
@@ -117,11 +95,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
             });
@@ -133,11 +107,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
            // console.log("errassssssssssssssssssssssssssssssssssssl");
@@ -155,11 +125,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             //console.log(data);
             res.json(data);
@@ -176,11 +142,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -195,11 +157,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -218,12 +176,7 @@ router.get("/",function(req,res){
                 data = {};
                 return;
             }
-            if(data.length == 0 ) {
-                res.setHeader("status",false);
-                //res.json(data);
-                return;
-            }
-            console.log("asd");
+           
             res.setHeader("status",true);
             res.json(data);
             return;
@@ -237,11 +190,7 @@ router.get("/",function(req,res){
                 data = {};
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+          
             res.setHeader("status",true);
             res.json(data);
             return;
@@ -255,11 +204,7 @@ router.get("/",function(req,res){
                 data = {};
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
             return;
@@ -272,11 +217,7 @@ router.get("/",function(req,res){
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+         
             res.setHeader("status",true);
             res.json(data);
             return;
@@ -289,11 +230,7 @@ router.get("/",function(req,res){
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -307,11 +244,7 @@ router.get("/",function(req,res){
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+            
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -326,11 +259,7 @@ router.get("/",function(req,res){
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data);
             return; 
@@ -345,11 +274,7 @@ router.get("/",function(req,res){
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -363,11 +288,7 @@ router.get("/",function(req,res){
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
+           
             res.setHeader("status",true);
             res.json(data); 
             return;
