@@ -4,12 +4,10 @@ const async = require('async');
 const urlArray = require('../models/PseudoArray').url;
 
 function fetchAllFeeds() {
+            console.log(urlArray);
             urlArray.forEach(function(element) {
-                addAutoFeeds(element, function(err,status) {
-                    if(err) {
-                        console.log("error in url :" + element );
-                    }
-                });
+                console.log("asd");
+                addAutoFeeds(element);
             }, this);
 }
 

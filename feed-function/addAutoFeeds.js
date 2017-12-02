@@ -5,13 +5,9 @@ const feedSchemaModel = require("../models/schemas/FeedSchema");
 const updateCategory = require("./updateCategory");
 
  
-function addAutoFeeds (url, callback) {
+function addAutoFeeds (url) {
     (function() {
         parser.parseURL(url, function(error, parsed){
-            if(error) {
-               callback(true,null);
-               return;
-            }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
             //console.log(len);
@@ -23,7 +19,7 @@ function addAutoFeeds (url, callback) {
                 feedSchemaModel.find({"title" : titleName}, function(err, searchedItem){
                     if(searchedItem.length === 0){
                         //console.log(item[i].categories);
-                        //console.log(item[i]);
+                        console.log(item[i]);
                         let entry = new feedSchemaModel({
                             title : item[i].title,
                             description : item[i].contentSnippet,
@@ -49,7 +45,7 @@ function addAutoFeeds (url, callback) {
                 });
              }
             
-            //console.log("done............");
+            console.log("done............");
         });
 
         //updateCategory(cat);

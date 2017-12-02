@@ -53,6 +53,7 @@ router.get('/feeds/:cat/', function(req,res) {
             if(data == null) {
                 res.setHeader("status",false);
                 res.json(data);
+                
                 return;
             }
             res.setHeader("status",true);
@@ -135,12 +136,11 @@ router.get('/feeds/:cat/', function(req,res) {
             if(data == null) {
                 res.setHeader("status",false);
                 res.json(data);
-                res.end();
                 return;
             }
             res.setHeader("status",true);
             res.json(data);
-            console.log("errassssssssssssssssssssssssssssssssssssl");
+           // console.log("errassssssssssssssssssssssssssssssssssssl");
             return;
         });  
     }
@@ -151,6 +151,8 @@ router.get('/feeds/:cat/', function(req,res) {
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                console.log("asdas");
+                res.end();
                 return;
             }
             if(data == null) {
@@ -159,6 +161,7 @@ router.get('/feeds/:cat/', function(req,res) {
                 return;
             }
             res.setHeader("status",true);
+            //console.log(data);
             res.json(data);
             return;
         });  
@@ -170,6 +173,7 @@ router.get('/feeds/:cat/', function(req,res) {
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                res.end();
                 return;
             }
             if(data == null) {
@@ -188,6 +192,7 @@ router.get('/feeds/:cat/', function(req,res) {
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
+                res.end();
                 return;
             }
             if(data == null) {
