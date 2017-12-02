@@ -1,15 +1,17 @@
 const ArraySchema = require('../models/schemas/ArraySchema');
 //const ArraySchema = require('../models/schemas/ArraySchema');
-let url = [];
-let cat = [];
+var url = [];
+var cat = [];
 
 function fillUrl() {
     ArraySchema.find({"category" : RegExp('.*?')}).select('category -_id').exec(function(err,items) {
         items.forEach(element => {
             cat.push(element.category);
+           // console.log(cat);
         });
     });
 
+    console.log(url);
 }
 
 function fillCat(item)  {
