@@ -9,7 +9,7 @@ function fetchAllFeeds() {
             const urlPromise = require('../models/PseudoArray').urlPromise.then((urlArray) => {
 
                 urlArray.forEach(function(element) {
-                    console.log("asd");
+                    //console.log("asd");
                     addAutoFeeds(element);
                 }, this);
 
