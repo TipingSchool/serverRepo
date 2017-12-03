@@ -8,6 +8,7 @@ const ArraySchemaModel = require('../models/schemas/ArraySchema');
 const addAutoFeeds = require("../feed-function/addAutoFeeds");
 const addNewCategory = require('../models/catArray');
 const ArrayFunctions = require('../feed-function/ArrayFunctions');
+const async = require('async');
 
 // categories function imports
 // const Function_for_fetching_Nodejs_feeds = require("../feed-function/nodejs_function");
@@ -15,8 +16,10 @@ const ArrayFunctions = require('../feed-function/ArrayFunctions');
 const FetchAllFeeds = require("../feed-function/fetchAllFeeds");
 
 ////////////////////////// API endpoints GET / POST / PUT /DELETE////////////////////
-ArrayFunctions.Init();
-FetchAllFeeds();
+//ArrayFunctions.Init();
+//FetchAllFeeds();
+
+async.series(ArrayFunctions.Init() ,FetchAllFeeds());
  setInterval(function(){
      FetchAllFeeds();
      
@@ -33,11 +36,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 return;
             }
             //console.log(data);
-            if(data.length == 0) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data);
         }); 
@@ -48,12 +46,6 @@ router.get('/feeds/:cat/', function(req,res) {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : true }).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.json({"status" : false});
-                return;
-            }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                
                 return;
             }
             res.setHeader("status",true);
@@ -68,11 +60,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data);
         });
@@ -84,11 +71,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader({"status" : false});
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data);
         });
@@ -98,11 +80,6 @@ router.get('/feeds/:cat/', function(req,res) {
         feedSchemaModel.find({"category" : {$regex : req.params.cat}, "published" : false , "archived" : true }).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
-                return;
-            }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
                 return;
             }
             res.setHeader("status",true);
@@ -117,11 +94,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data);
             });
@@ -131,11 +103,6 @@ router.get('/feeds/:cat/', function(req,res) {
             if(err) {
                 res.setHeader("status",false);
                 res.end();
-                return;
-            }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
                 return;
             }
             res.setHeader("status",true);
@@ -155,11 +122,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             //console.log(data);
             res.json(data);
@@ -176,11 +138,6 @@ router.get('/feeds/:cat/', function(req,res) {
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -193,11 +150,6 @@ router.get('/feeds/:cat/', function(req,res) {
             if(err) {
                 res.setHeader("status",false);
                 res.end();
-                return;
-            }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
                 return;
             }
             res.setHeader("status",true);
@@ -307,11 +259,6 @@ router.get("/",function(req,res){
                 res.end();
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -324,11 +271,6 @@ router.get("/",function(req,res){
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
-                return;
-            }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
                 return;
             }
             res.setHeader("status",true);
@@ -345,11 +287,6 @@ router.get("/",function(req,res){
                 res.setHeader("status",false);
                 return;
             }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
-                return;
-            }
             res.setHeader("status",true);
             res.json(data); 
             return;
@@ -361,11 +298,6 @@ router.get("/",function(req,res){
         feedSchemaModel.find({"category" : {$regex : req.params.cat},"date":{$gte:lastWeek}}).sort({"date" : -1}).exec(function(err, data){
             if(err) {
                 res.setHeader("status",false);
-                return;
-            }
-            if(data == null) {
-                res.setHeader("status",false);
-                res.json(data);
                 return;
             }
             res.setHeader("status",true);

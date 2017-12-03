@@ -1,4 +1,8 @@
-const catArray = require('../models/PseudoArray').cat;
+const catPromise = require('../models/PseudoArray').catPromise.then(function(cat) {
+    catArray = cat;
+});
+let catArray;
+
 module.exports =  function updateCategory (item) {
     let finalCat = "";
     let len , titleLength, linkLength;

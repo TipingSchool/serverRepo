@@ -43,8 +43,8 @@ function Init () {
         });
     });
 
-    Pseudo.fillCat();
-    Pseudo.fillUrl();
+    //Pseudo.fillCat();
+    //Pseudo.fillUrl();
 }
 
 function addNewUrl (url, callback) {
@@ -65,7 +65,7 @@ function addNewUrl (url, callback) {
             }
             
         });
-        Pseudo.fillUrl();
+      //  Pseudo.fillUrl();
 }
 
 function addNewCat (cat, callback) {
@@ -85,7 +85,7 @@ function addNewCat (cat, callback) {
                 callback(true,null);
             }   
         });
-        Pseudo.fillCat();
+        //Pseudo.fillCat();
 }
 
 module.exports = {

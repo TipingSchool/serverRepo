@@ -18,7 +18,7 @@ function addAutoFeeds (url) {
                 let initCat = "";
                 feedSchemaModel.find({"title" : titleName}, function(err, searchedItem){
                     if(searchedItem.length === 0){
-                        //console.log(item[i].categories);
+                        console.log(item[i].categories);
                         console.log(item[i]);
                         let entry = new feedSchemaModel({
                             title : item[i].title,

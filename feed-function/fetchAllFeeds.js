@@ -1,14 +1,22 @@
 const addAutoFeeds = require('./addAutoFeeds');
 const ArraySchema = require('../models/schemas/ArraySchema');
 const async = require('async');
-const urlArray = require('../models/PseudoArray').url;
+
+let urlArray = [];
 
 function fetchAllFeeds() {
-            console.log(urlArray);
-            urlArray.forEach(function(element) {
-                console.log("asd");
-                addAutoFeeds(element);
-            }, this);
+            //console.log("array is " + urlArray);
+            const urlPromise = require('../models/PseudoArray').urlPromise.then((urlArray) => {
+
+                urlArray.forEach(function(element) {
+                    console.log("asd");
+                    addAutoFeeds(element);
+                }, this);
+
+                
+            });
+
+            
 }
 
 module.exports = fetchAllFeeds;
