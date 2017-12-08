@@ -56,7 +56,7 @@ function addNewUrl (url, callback) {
 
                 entry.save(function(e){
                     if(e) throw e;
-                    console.log("new url added" + url);
+                    console.log("new url added " + url);
                 });
                 callback(null,true);
             }

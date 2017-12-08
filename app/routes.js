@@ -429,21 +429,22 @@ router.get("/search",function(req,res){
 
 router.post('/addnewurl',function(req,res) {
     let url = req.body.url;
-    //console.log(req.body.url);
+
+
+    addAutoFeeds(url, function(err) {
+        if(err == false) {
+            ArrayFunctions.addNewUrl(url,function (err,status) {
+                if(err) {
+                    res.json({"status" : false});
+                    return;
+                }
+                   // console.log("statis is " + status);
+                    //addAutoFeeds(url);
+                    res.json({"status" : true});
+            });
+        }
+    })
     
-
-    if(addAutoFeeds(url)) {
-
-        ArrayFunctions.addNewUrl(url,function (err,status) {
-            if(err) {
-                res.json({"status" : false});
-                return;
-            }
-               // console.log("statis is " + status);
-                //addAutoFeeds(url);
-                res.json({"status" : true});
-        });
-    }
     
 });
 
