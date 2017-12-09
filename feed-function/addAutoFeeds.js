@@ -15,7 +15,7 @@ function addAutoFeeds (url, callback) {
             }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
-            //console.log(len);
+            // console.log(item);
     
             for(let i = 0; i < len; i++){
                 
