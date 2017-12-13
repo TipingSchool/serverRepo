@@ -10,7 +10,7 @@ function fetchAllFeeds() {
 
                 urlArray.forEach(function(element) {
                     //console.log("asd");
-                    addAutoFeeds(element);
+                    addAutoFeeds(element).catch(() => console.log('Couldnt Parse : ' + element ));
                 }, this);
 
                 

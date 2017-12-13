@@ -68,6 +68,17 @@ function addNewUrl (url, callback) {
       //  Pseudo.fillUrl();
 }
 
+function doWeHaveUrl(url, callback) {
+    ArraySchema.find({'url' : url}, (err, items) => {
+        if(items.length == 0 ) {
+            callback(true);
+        }
+        else {
+            callback(false);
+        }
+    })
+}
+
 function addNewCat (cat, callback) {
             ArraySchema.find({"category" : cat}, function(error,items) {
             if(items.length == 0) {
@@ -91,5 +102,6 @@ function addNewCat (cat, callback) {
 module.exports = {
     addNewCat : addNewCat,
     addNewUrl : addNewUrl,
-    Init : Init
+    Init : Init,
+    doWeHaveUrl : doWeHaveUrl
 }

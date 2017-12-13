@@ -50,7 +50,7 @@ router.get('/feeds/:cat/', function(req,res) {
             }
             res.setHeader("status",true);
             res.json(data);
-            console.log("published : " + req.params.cat)
+            //console.log("published : " + req.params.cat)
         });
     }
 
@@ -388,7 +388,7 @@ router.post('/feeds/:cat',function(req,res){
     }
 
     else if(req.body.action === "publish"){
-        console.log("called");
+        //console.log("called");
         let _id = req.body.feedObjectId;
         feedSchemaModel.findByIdAndUpdate(_id, { $set : {"published" : true}}, function(err,doc){
             if(err) {
@@ -429,23 +429,21 @@ router.get("/search",function(req,res){
 
 router.post('/addnewurl',function(req,res) {
     let url = req.body.url;
-
-
-    addAutoFeeds(url, function(err) {
-        if(err == false) {
-            ArrayFunctions.addNewUrl(url,function (err,status) {
-                if(err) {
-                    res.json({"status" : false});
-                    return;
-                }
-                   // console.log("statis is " + status);
-                    //addAutoFeeds(url);
-                    res.json({"status" : true});
+    ArrayFunctions.doWeHaveUrl(url, (err) => {
+        if(err) {
+            addAutoFeeds(url).then(() => {
+                ArrayFunctions.addNewUrl(url,function (err,status) {
+                    if(err) {
+                        res.json({"status" : false});
+                        return;
+                    }
+                       // console.log("statis is " + status);
+                        //addAutoFeeds(url);
+                        res.json({"status" : true});
+                });
             });
         }
     })
-    
-    
 });
 
 router.post('/addnewcat', function(req,res) {

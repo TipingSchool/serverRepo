@@ -7,18 +7,17 @@ const updateCategory = require("./updateCategory");
  
 function addAutoFeeds (url, callback) {
     var flag;
-    let parsePromise = new Promise ((success, reject) => {
+    let parsePromise = new Promise ((resolve, reject) => {
         parser.parseURL(url, function(error, parsed){
             if(parsed == undefined) {
+                console.log("inside eror")
                 reject();
                 return;
             }
             let len = parsed.feed.entries.length;
             let item = parsed.feed.entries; 
-            //console.log(len);
-    
-            for(let i = 0; i < len; i++){
-                
+            //console.log(item);
+            for(let i = 0; i < len; i++){  
                 let titleName = item[i].title;
                 let initCat = "";
                 feedSchemaModel.find({"title" : titleName}, function(err, searchedItem){
@@ -42,22 +41,19 @@ function addAutoFeeds (url, callback) {
                                     //console.log("feed added..........");
                                     console.log("category is : " + entry.category);
                                 });
-                            }
-    
-                            
-                        
+                            }     
                     }
                 });
                 }
             
             //console.log("done............");
         });
-        success();
+        resolve();
+        
     })
     
 
-    parsePromise.then(() => flag = true).catch(()=> flag = false);
-    return flag;
+    return parsePromise;
 }
 
 module.exports = addAutoFeeds;
